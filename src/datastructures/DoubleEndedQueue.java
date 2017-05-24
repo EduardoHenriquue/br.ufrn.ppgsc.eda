@@ -22,16 +22,16 @@ public class DoubleEndedQueue {
         if(dequeIsFull(deque)){
             throw new Exception("Deque is full!");
         }
-        if(deque.length != 0){
-            for (int i = this.rightTail; i >=0; i--){
+        if(this.getLeftTail() == 0){
+            for (int i = this.getRightTail(); i >= 0; i--){
                 deque[i+1] = deque[i];
             }
-            deque[0] = key;
-            this.rightTail+=1;
+            deque[this.getLeftTail()] = key;
+            this.setRightTail(this.getRightTail()+1);
         } else {
-            this.leftTail+=1;
-            this.rightTail+=1;
-            deque[this.leftTail] = key;
+            this.setLeftTail(this.getLeftTail()+1);
+            this.setRightTail(this.getRightTail()+1);
+            deque[this.getLeftTail()] = key;
         }
     }
 
@@ -44,13 +44,13 @@ public class DoubleEndedQueue {
         if(dequeIsFull(deque)){
             throw new Exception("Deque is full!");
         }
-        if(deque.length != 0){
-            deque[rightTail+1] = key;
-            this.rightTail+=1;
+        if(deque.length == 0){
+            deque[getRightTail()+1] = key;
+            this.setRightTail(this.getRightTail()+1);
         } else{
-            this.leftTail+=1;
-            this.rightTail+=1;
-            deque[this.rightTail] = key;
+            this.setLeftTail(this.getLeftTail()+1);
+            this.setRightTail(this.getRightTail()+1);
+            deque[this.getRightTail()] = key;
         }
     }
 
@@ -62,15 +62,15 @@ public class DoubleEndedQueue {
      */
     public int deleteKeyLeftTail(Integer[] deque) throws Exception{
         int key;
-        if (deque.length == 0){
+        if (this.getLeftTail() == -1){
             throw new Exception("Deque is empty");
         } else {
-            key = deque[rightTail];
-            deque[rightTail] = null;
-            for(int i = 1; i < this.rightTail-1; i++){
-                deque[i-1] = deque[i];
+            key = deque[this.getLeftTail()];
+            for(int i = 0; i < this.getRightTail(); i++){
+                deque[i] = deque[i+1];
             }
-            this.rightTail-=1;
+            this.setRightTail(this.getRightTail()-1);
+            deque[this.getRightTail()+1] = null;
         }
         return key;
     }
@@ -83,12 +83,12 @@ public class DoubleEndedQueue {
      */
     public int deleteKeyRightTail(Integer[] deque) throws Exception{
         int key;
-        if(deque.length == 0){
+        if(this.getLeftTail() == -1){
             throw new Exception("Deque is empty!");
         } else {
-            key = deque[this.rightTail];
-            deque[this.rightTail] = null;
-            this.rightTail-=1;
+            key = deque[this.getRightTail()];
+            this.setRightTail(this.getRightTail()-1);
+            deque[this.getRightTail()+1] = null;
         }
         return key;
     }
@@ -100,11 +100,35 @@ public class DoubleEndedQueue {
      */
     public boolean dequeIsFull(Integer[] deque){
         int cont = 0;
-        for (Integer i: deque){
-            if(deque[i] != null){
+        for (Integer d: deque){
+            if(d != null){
                 cont++;
             }
         }
         return deque.length == cont;
+    }
+
+    public String printDeque(Integer[] deque) {
+        String print = "";
+        for (Integer d: deque){
+            print = print + " "+d+",";
+        }
+        return print;
+    }
+
+    public int getLeftTail() {
+        return leftTail;
+    }
+
+    public void setLeftTail(int leftTail) {
+        this.leftTail = leftTail;
+    }
+
+    public int getRightTail() {
+        return rightTail;
+    }
+
+    public void setRightTail(int rightTail) {
+        this.rightTail = rightTail;
     }
 }
